@@ -228,6 +228,7 @@
                                 {/if}
                                 <DayCell
                                     dayData={cell.data}
+                                    selected={selected?.date === cell.data.date}
                                     onhover={showTooltip}
                                     onmove={moveTooltip}
                                     onleave={hideTooltip}
@@ -347,10 +348,12 @@
         font-weight: 900;
         color: var(--primary-color);
         font-size: 1rem;
+        opacity: 0.85;
     }
 
     .selected-meta.cloudy em {
         color: var(--secondary-color);
+        
     }
 
     .selected-notes {

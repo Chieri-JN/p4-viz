@@ -24,6 +24,7 @@
         dayData,
         size = 96,
         showDayNum = true,
+        selected = false,
         onhover,
         onmove,
         onleave,
@@ -32,6 +33,7 @@
         dayData: DayData;
         size?: number;
         showDayNum?: boolean;
+        selected?: boolean;
         onhover?: HoverFn;
         onmove?: HoverFn;
         onleave?: LeaveFn;
@@ -119,6 +121,7 @@
 
 <div
     class="day-cell"
+    class:selected
     role="button"
     tabindex="0"
     onmouseenter={(e) => onhover?.(e, dayData)}
@@ -165,13 +168,17 @@
         padding: 10px;
         border-radius: 6px;
         cursor: pointer;
-        transition: transform 0.18s ease;
+        transition: transform 0.18s ease, background-color 0.18s ease;
         outline: none;
     }
 
     .day-cell:hover,
     .day-cell:focus-visible {
         transform: scale(1.06);
+    }
+
+    .day-cell.selected {
+        background-color: var(--grey-sub);
     }
 
     .day-num {
