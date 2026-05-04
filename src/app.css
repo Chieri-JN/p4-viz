@@ -1,7 +1,7 @@
 @font-face {
-	font-family: "Affigere";
-	src: url("/fonts/Affigere-Regular.woff2") format("woff2");
-	font-weight: 400;
+	font-family: "Gabarito";
+	src: url("/fonts/Gabarito%5Bwght%5D.ttf") format("truetype-variations");
+	font-weight: 400 900;
 	font-style: normal;
 	font-display: swap;
 }
@@ -14,3 +14,30 @@
 	font-display: swap;
 }
 
+
+:root {
+	--font-gabarito: "Gabarito", sans-serif;
+	--font-leaguespartan: "LeagueSpartan", sans-serif;
+	--font-haas: "neue-haas-grotesk-display", sans-serif;
+
+
+	--primary-color: #f15a26;
+    --secondary-color: #3b9aff;
+    --tertiary-color: #99c9ff; 
+    --quaternary-color: #f7a277; 
+    --quinary-color: #1e4ea7; 
+    --senary-color: #b8410a; 
+    --septenary-color: #eff0f8; 
+    --octonary-color: #fddbcc;  
+
+	--black-sub: #1f1d21;
+    --white-sub: #f6f6f3;
+    --grey-sub: #d8d8ce;
+    --dark-grey-sub: #1d1725;
+
+	
+	body {
+		background-color: var(--white-sub);
+	}
+
+}
