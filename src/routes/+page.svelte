@@ -79,6 +79,13 @@
         return `${fmt(sortedData[0].date)} – ${fmt(sortedData[sortedData.length - 1].date)}`;
     }
 
+    // Selected cell state
+    let selected = $state<DayData | null>(null);
+
+    function selectDay(d: DayData) {
+        selected = selected?.date === d.date ? null : d;
+    }
+
     // Tooltip state
     let ttVisible = $state(false);
     let ttData = $state<DayData | null>(null);
@@ -118,19 +125,51 @@
 </script>
 
 <div class="page">
-    <header class="hero">
-        <!-- <h1>A Month <em>in Music</em></h1> -->
-         <h1>How the weather affected the music I listen to</h1>
-        <p class="lede">
-            Over the span of 30 days, I tended to listen to more energizing music when it was brighter outside and more mellowed music when its darker outside. 
-            Contrary to my initial expectations, the BPM of the song did not have a significant correlation with my mood. 
-            <!-- A daily soundtrack mapped to weather, mood, and tempo. Each
-            <span class="dot orange"></span> sunny or
-            <span class="dot blue"></span> cloudy day is a donut—the shape below
-            reflects how the song made me feel, the bar across it shows its BPM. -->
-            Hover any day to play the track.
-        </p>
-    </header>
+    <div class="top-section">
+        <header class="hero">
+            <!-- <h1>A Month <em>in Music</em></h1> -->
+            <h1>How the weather affected the music I listen to</h1>
+            <p class="lede">
+                Over the span of 30 days, I tended to listen to more energizing music when it was brighter outside and more mellowed music when its darker outside.
+                Contrary to my initial expectations, the BPM of the song did not have a significant correlation with my mood.
+                <!-- A daily soundtrack mapped to weather, mood, and tempo. Each
+                <span class="dot orange"></span> sunny or
+                <span class="dot blue"></span> cloudy day is a donut—the shape below
+                reflects how the song made me feel, the bar across it shows its BPM. -->
+                Hover any day to preview, or click a day to pin it here.
+            </p>
+        </header>
+
+        <aside class="selected-panel" aria-live="polite">
+            <div class="selected-title">Selected day</div>
+            {#if selected}
+                <div class="selected-body">
+                    <div class="selected-cell-wrap">
+                        <DayCell dayData={selected} size={80} showDayNum={false} />
+                    </div>
+                    <div class="selected-info">
+                        <div class="selected-date">{formatDate(selected.date)}</div>
+                        <div
+                            class="selected-meta"
+                            class:cloudy={selected.weather.trim().toLowerCase().startsWith('cloud')}
+                        >
+                            The weather was <em>{selected.weather.trim()}</em> and the song's  tempo was <em>{selected.bpm} BPM</em> and I felt <em>{selected.feeling.trim()}</em>
+                        </div>
+                        {#if selected.notes}
+                            <div class="selected-notes">"{selected.notes}"</div>
+                        {/if}
+                    </div>
+                </div>
+                <div class="selected-embed">
+                    <SongCard embedUrl={selected.spotifyEmbed} />
+                </div>
+            {:else}
+                <div class="selected-empty">
+                    Click any day in the calendar below to see the song and notes.
+                </div>
+            {/if}
+        </aside>
+    </div>
 
     <div class="body">
         <aside class="legend">
@@ -192,6 +231,7 @@
                                     onhover={showTooltip}
                                     onmove={moveTooltip}
                                     onleave={hideTooltip}
+                                    onselect={selectDay}
                                 />
                             </div>
                         {/if}
@@ -237,9 +277,105 @@
         min-width: 0;
     }
 
-    .hero {
+    .top-section {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 3rem;
+        align-items: start;
         margin-bottom: 3rem;
+    }
+
+    .hero {
         max-width: 760px;
+    }
+
+    .selected-panel {
+        border: 1px solid var(--grey-sub);
+        border-radius: 14px;
+        padding: 1.25rem 1.25rem 1rem;
+        background: var(--white-sub, #fff);
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+        min-height: 220px;
+    }
+
+    .selected-title {
+        font-family: var(--font-gabarito);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        color: var(--black-sub);
+        opacity: 0.55;
+    }
+
+    .selected-body {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .selected-cell-wrap {
+        flex: 0 0 auto;
+    }
+
+    .selected-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        min-width: 0;
+    }
+
+    .selected-date {
+        font-family: var(--font-gabarito);
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--black-sub);
+        letter-spacing: -0.01em;
+    }
+
+    .selected-meta {
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--black-sub);
+        opacity: 0.55;
+    }
+    .selected-meta em {
+        font-style: normal;
+        font-weight: 900;
+        color: var(--primary-color);
+        font-size: 1rem;
+    }
+
+    .selected-meta.cloudy em {
+        color: var(--secondary-color);
+    }
+
+    .selected-notes {
+        margin-top: 0.25rem;
+        font-size: 0.85rem;
+        font-style: italic;
+        color: var(--dark-grey-sub);
+        opacity: 0.85;
+        line-height: 1.45;
+    }
+
+    .selected-embed {
+        margin-top: auto;
+    }
+
+    .selected-embed :global(iframe) {
+        height: 80px !important;
+        min-height: 80px;
+    }
+
+    .selected-empty {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--dark-grey-sub);
+        opacity: 0.7;
     }
 
     .hero h1 {
@@ -451,6 +587,10 @@
     }
 
     @media (max-width: 900px) {
+        .top-section {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
         .body {
             grid-template-columns: 1fr;
             gap: 2rem;

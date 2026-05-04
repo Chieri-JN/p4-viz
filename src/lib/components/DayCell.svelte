@@ -18,19 +18,24 @@
 
     type HoverFn = (e: MouseEvent, d: DayData) => void;
     type LeaveFn = () => void;
+    type ClickFn = (d: DayData) => void;
 
     let {
         dayData,
         size = 96,
+        showDayNum = true,
         onhover,
         onmove,
-        onleave
+        onleave,
+        onselect
     }: {
         dayData: DayData;
         size?: number;
+        showDayNum?: boolean;
         onhover?: HoverFn;
         onmove?: HoverFn;
         onleave?: LeaveFn;
+        onselect?: ClickFn;
     } = $props();
 
     let svgEl: SVGSVGElement;
@@ -119,8 +124,17 @@
     onmouseenter={(e) => onhover?.(e, dayData)}
     onmousemove={(e) => onmove?.(e, dayData)}
     onmouseleave={() => onleave?.()}
+    onclick={() => onselect?.(dayData)}
+    onkeydown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onselect?.(dayData);
+        }
+    }}
 >
-    <span class="day-num">{dayNum}</span>
+    {#if showDayNum}
+        <span class="day-num">{dayNum}</span>
+    {/if}
 
     <div class="ring-wrap" style="width:{size}px;height:{size}px;">
         <svg
