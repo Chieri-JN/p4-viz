@@ -128,7 +128,7 @@
     <div class="top-section">
         <header class="hero">
             <!-- <h1>A Month <em>in Music</em></h1> -->
-            <h1>How the weather affected the music I listen to</h1>
+            <h1>How the weather affected the music I listen to.</h1>
             <p class="lede">
                 Over the span of 30 days, I tended to listen to more energizing music when it was brighter outside and more mellowed music when its darker outside.
                 Contrary to my initial expectations, the BPM of the song did not have a significant correlation with my mood.
@@ -251,7 +251,7 @@
                 {ttData.weather.trim()} · {ttData.bpm} BPM · {ttData.feeling.trim()}
             </div>
         </div>
-        <SongCard embedUrl={ttData.spotifyEmbed} />
+        <!-- <SongCard embedUrl={ttData.spotifyEmbed} /> -->
         {#if ttData.notes}
             <div class="tooltip-notes">"{ttData.notes}"</div>
         {/if}
